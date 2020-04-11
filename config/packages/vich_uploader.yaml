@@ -1,0 +1,16 @@
+vich_uploader:
+    db_driver: orm
+
+    mappings:
+        media_product:
+            uri_prefix: /media/images/product
+            upload_destination: '%kernel.project_dir%/public/media/image/product'
+            # Will rename uploaded files using a uniqueid as a prefix.
+            namer: Vich\UploaderBundle\Naming\OrignameNamer
+
+        media_category:
+            uri_prefix: /media/images/category
+            upload_destination: '%kernel.project_dir%/public/media/images/category'
+            # Will rename uploaded files using a uniqueid as a prefix.
+            namer: Vich\UploaderBundle\Naming\OrignameNamer
+

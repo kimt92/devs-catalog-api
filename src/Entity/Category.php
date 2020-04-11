@@ -6,10 +6,22 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
+
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\CategoryRepository")
- @apiResource
+ * @ApiResource(
+ *     iri="http://schema.org/Category",
+ *     normalizationContext={
+ *         "groups"={"category:read"}
+ *     }
+ * )
+ *
  */
 class Category
 {
@@ -17,26 +29,33 @@ class Category
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"category:read"})
      */
     private $id;
 
+
     /**
+     *
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"category:read"})
      */
     private $image;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"category:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="text")
+     * @Groups({"category:read"})
      */
     private $description;
 
     /**
      * @ORM\OneToMany(targetEntity="App\Entity\Product", mappedBy="category")
+     * @Groups({"category:read"})
      */
     private $products;
 

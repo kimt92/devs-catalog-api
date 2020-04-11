@@ -4,13 +4,67 @@ namespace App\Entity;
 
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
+use Symfony\Component\Serializer\Annotation\Groups;
+use App\Controller\CreateProductImageAction;
 
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
- @apiResource
+ * @ApiResource(
+ *     iri="http://schema.org/Product",
+ *     normalizationContext={
+ *         "groups"={"product:read"}
+ *     },
+ *     collectionOperations={
+ *         "post"={
+ *             "controller"=CreateProductImageAction::class,
+ *             "deserialize"=false,
+ *             "validation_groups"={"Default", "product:create"},
+ *             "openapi_context"={
+ *                 "requestBody"={
+ *                     "content"={
+ *                         "multipart/form-data"={
+ *                             "schema"={
+ *                                 "type"="object",
+ *                                 "properties"={
+ *                                     "imageFile"={
+ *                                         "type"="string",
+ *                                         "format"="binary"
+ *                                     },
+                                        "name"={
+ *                                         "type"="string"
+ *                                     },
+                                        "price"={
+ *                                         "type"="int"
+ *                                     },
+                                        "quantity"={
+ *                                         "type"="int"
+ *                                     },
+ *                                 }
+ *                             }
+ *                         }
+ *                     }
+ *                 }
+ *             }
+ *         },
+ *         "get"
+ *         
+ *                 
+ *     },
+ *     itemOperations={
+ *         "get",
+ *         "put",
+ *         "patch",
+ *         "delete"
+ *     }
+ * )
+ * @Vich\Uploadable
  */
 class Product
 {
@@ -18,31 +72,54 @@ class Product
      * @ORM\Id()
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
+     * @Groups({"product:read","category:read"})
      */
     private $id;
 
+     /**
+     * @var string|null
+     *
+     * @ApiProperty(iri="http://schema.org/contentUrl")
+     * @Groups({"product:read","category:read"})
+     */
+    public $contentUrl;
+
+     /**
+     * @var File|null
+     *
+     * @Assert\NotNull(groups={"product:create"})
+     * @Vich\UploadableField(mapping="media_product", fileNameProperty="image")
+     */
+    public $imageFile;
+
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"product:read","category:read"})
      */
-    private $image;
+    public $image;
+
+
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Groups({"product:read","category:read"})
      */
     private $name;
 
     /**
      * @ORM\Column(type="float")
+     * @Groups({"product:read","category:read"})
      */
     private $price;
 
     /**
      * @ORM\Column(type="integer")
+     * @Groups({"product:read","category:read"})
      */
     private $quantity;
 
     /**
-     * @ORM\ManyToOne(targetEntity="App\Entity\category", inversedBy="products")
+     * @ORM\ManyToOne(targetEntity="App\Entity\Category", inversedBy="products")
      */
     private $category;
 

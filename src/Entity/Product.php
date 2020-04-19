@@ -11,11 +11,10 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\HttpFoundation\File\File;
 use Vich\UploaderBundle\Mapping\Annotation as Vich;
 use Symfony\Component\Serializer\Annotation\Groups;
-use App\Controller\CreateProductImageAction;
-
+use App\Controller\ProductController;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
+ * @ORM\Entity
  * @ApiResource(
  *     iri="http://schema.org/Product",
  *     normalizationContext={
@@ -23,7 +22,7 @@ use App\Controller\CreateProductImageAction;
  *     },
  *     collectionOperations={
  *         "post"={
- *             "controller"=CreateProductImageAction::class,
+ *             "controller"=ProductController::postImage,
  *             "deserialize"=false,
  *             "validation_groups"={"Default", "product:create"},
  *             "openapi_context"={
@@ -36,16 +35,7 @@ use App\Controller\CreateProductImageAction;
  *                                     "imageFile"={
  *                                         "type"="string",
  *                                         "format"="binary"
- *                                     },
-                                        "name"={
- *                                         "type"="string"
- *                                     },
-                                        "price"={
- *                                         "type"="int"
- *                                     },
-                                        "quantity"={
- *                                         "type"="int"
- *                                     },
+ *                                     }
  *                                 }
  *                             }
  *                         }
@@ -54,14 +44,6 @@ use App\Controller\CreateProductImageAction;
  *             }
  *         },
  *         "get"
- *         
- *                 
- *     },
- *     itemOperations={
- *         "get",
- *         "put",
- *         "patch",
- *         "delete"
  *     }
  * )
  * @Vich\Uploadable
@@ -84,13 +66,6 @@ class Product
      */
     public $contentUrl;
 
-     /**
-     * @var File|null
-     *
-     * @Assert\NotNull(groups={"product:create"})
-     * @Vich\UploadableField(mapping="media_product", fileNameProperty="image")
-     */
-    public $imageFile;
 
     /**
      * @ORM\Column(type="string", length=255, nullable=true)
@@ -98,6 +73,13 @@ class Product
      */
     public $image;
 
+
+     /**
+     * @var File|null
+     * @Assert\NotNull(groups={"product:create"})
+     * @Vich\UploadableField(mapping="media_product", fileNameProperty="image")
+     */
+    public $imageFile;
 
 
     /**

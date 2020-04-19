@@ -35,7 +35,7 @@ final class ResolveProductImageContentUrlSubscriber implements EventSubscriberIn
             return;
         }
 
-        if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], product::class, true)) {
+        if (!($attributes = RequestAttributesExtractor::extractAttributes($request)) || !\is_a($attributes['resource_class'], Product::class, true)) {
             return;
         }
 
